@@ -17,7 +17,7 @@ pipeline {
         stage("build jar") {
             steps {
                 script {
-                    gv.buildApp()                    
+                    gv.buildJar()                    
                 }
             }
 
