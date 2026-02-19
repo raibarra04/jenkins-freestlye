@@ -1,58 +1,33 @@
-def gv
-
 pipeline {
-
     agent any
-    parameters {
-        choice(name: 'VERSION', choices: ['1.1.0', '1.2.0', '1.3.0'], description: '')
-        booleanParam(name: 'executeTests', defaultValue: true, description: '')
+    tools {
+        maven "maven-3.9"
     }
-
     stages {
-        stage("init") {
-
+        stage("build jar") {
             steps {
                 script {
-                    gv = load "script.groovy"
-                }
-            }
-        }
-        stage("build") {
-
-            steps {
-                script {
-                    gv.buildApp()
-                } 
-            }
-        }
-        stage("test") {
-            when {
-                expression {
-                    params.executeTests
+                    echo "building the application..."
+                    sh "mvn package"
                 }
             }
 
+        }
+        stage("build image") {
             steps {
                 script {
-                    gv.testApp()
-                } 
+                    echo "building the docker image..."
+                    withCredentials([usernamePassword(credentialsId: 'docker-hub-repo', passwordVariable: 'PASS', usernameVariable: 'USER')]) {
+                        sh 'docker build -t raibarra/java-maven-demo-app:jma-2.0 .'
+                        sh 'echo $PASS | docker login -u $USER --password-stdin'
+                        sh 'docker push raibarra/java-maven-demo-app:jma-2.0'
+                    }
+                }
             }
+
         }
         stage("deploy") {
-            input {
-                message "select environment to deploy to"
-                ok "Done"
-                parameters {
-                    choice(name: 'ENV', choices: ['dev', 'staging', 'prod'], description: '')
 
-                }
-            }
-            steps {
-                script {
-                    gv.deployApp()
-                    echo "Deploying to ${ENV}"
-                } 
-            }
         }
     }
 }
