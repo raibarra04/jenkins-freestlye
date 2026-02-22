@@ -36,7 +36,7 @@ pipeline {
         stage("build image") {
             steps {
                 script {
-                    buildImage()
+                    buildImage 'raibarra/java-maven-demo-app:jma-3.0'
                 }
             }
 
