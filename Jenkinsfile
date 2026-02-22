@@ -1,5 +1,8 @@
 #!/user/bin/env groovy
-@Library('jenkins-shared-library')
+library indentifier: 'jenkins-shared-library@main', retriever: modernSCM(
+[$class: 'GitSCMSource',
+remote: 'https://github.com/raibarra04/jenkins-shared-library.git',
+credentialsId: 'github-credentials'])
 
 def gv
 
@@ -37,6 +40,8 @@ pipeline {
             steps {
                 script {
                     buildImage 'raibarra/java-maven-demo-app:jma-3.0'
+                    dockerLogin()
+                    dockerPush 'raibarra/java-maven-demo-app:jma-3.0'
                 }
             }
 
