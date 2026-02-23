@@ -1,5 +1,5 @@
 def testApp() {
-    echo "Testing the application..."
+    echo "Testing the application...!"
 }
 
 def buildJar() {
