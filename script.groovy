@@ -32,7 +32,7 @@ def deployApp() {
 
 def commitVersionUpdate() {
     echo "Committing app version update..."
-    withCredentials([usernamePassword(credentialsId: 'github-credentials', passwordVariable: 'PASS', usernameVariable: 'USER')]) {
+    withCredentials([string(credentialsId: 'github-token', variable: 'TOKEN')]) {
         sh 'git config --global user.email "jenkins@example.com"'
         sh 'git config --global user.name "jenkins"'
         
@@ -40,9 +40,9 @@ def commitVersionUpdate() {
         sh 'git branch'
         sh 'git config --list'
         
-        sh "git remote set-url origin https://${USER}:${PASS}@github.com/raibarra04/jenkins-multibranch-pipeline.git"
+        sh "git remote set-url origin https://${TOKEN}@github.com/raibarra04/jenkins-multibranch-pipeline.git"
         sh 'git add .'
-        sh 'git commit -m "integration: no-ref: ci version update"'
+        sh 'git commit -m "chore: no-ref: ci version update"'
         sh 'git push origin HEAD:jenkins-jobs-mine'
     }
 }
