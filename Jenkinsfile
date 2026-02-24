@@ -22,12 +22,20 @@ pipeline {
             }
 
         }
-        stage("build jar") {
-            when {
-                expression {
-                    BRANCH_NAME == 'main'
+        stage("increment version") {
+            steps {
+                script {
+                    gv.incrementVersion()                    
                 }
             }
+
+        }
+        stage("build jar") {
+            // when {
+            //     expression {
+            //         BRANCH_NAME == 'main'
+            //     }
+            // }
             steps {
                 script {
                     gv.buildJar()                    
@@ -36,11 +44,11 @@ pipeline {
 
         }
         stage("build image") {
-            when {
-                expression {
-                    BRANCH_NAME == 'main'
-                }
-            }
+            // when {
+            //     expression {
+            //         BRANCH_NAME == 'main'
+            //     }
+            // }
             steps {
                 script {
                     gv.buildImage()
@@ -49,11 +57,11 @@ pipeline {
 
         }
         stage("deploy") {
-            when {
-                expression {
-                    BRANCH_NAME == 'main'
-                }
-            }
+            // when {
+            //     expression {
+            //         BRANCH_NAME == 'main'
+            //     }
+            // }
             steps {
                 script {
                     gv.deployApp()                    
