@@ -27,7 +27,11 @@ def buildImage() {
 }
 
 def deployApp() {
-    echo 'Deploying the application...'
+    echo "Deploying the application to EC2..."
+    def dockerCmd = "docker run -d -p 8080:8080 raibarra/java-maven-demo-app:${env.IMAGE_NAME}"
+    sshagent(['ec2-server-key']) {
+        sh "ssh -o StrictHostKeyChecking=no ec2-user@3.17.190.15 ${dockerCmd}"
+    }
 }
 
 def commitVersionUpdate() {

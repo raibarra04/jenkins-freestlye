@@ -57,11 +57,11 @@ pipeline {
 
         }
         stage("deploy") {
-            // when {
-            //     expression {
-            //         BRANCH_NAME == 'main'
-            //     }
-            // }
+            when {
+                expression {
+                    BRANCH_NAME == 'jenkins-jobs-mine'
+                }
+            }
             steps {
                 script {
                     gv.deployApp()                    
