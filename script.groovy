@@ -28,9 +28,10 @@ def buildImage() {
 
 def deployApp() {
     echo "Deploying the application to EC2..."
-    def dockerCmd = "docker run -d -p 8080:8080 raibarra/java-maven-demo-app:${IMAGE_NAME}"
+    def dockerComposeCmd = "docker-compose -f docker-compose.yaml up --detach"
     sshagent(['ec2-server-key']) {
-        sh "ssh -o StrictHostKeyChecking=no ec2-user@3.17.190.15 ${dockerCmd}"
+        sh "scp docker-compose.yaml ec2-user@3.17.190.15:/home/ec2-user"
+        sh "ssh -o StrictHostKeyChecking=no ec2-user@3.17.190.15 ${dockerComposeCmd}"
     }
 }
 
